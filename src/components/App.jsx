@@ -1,16 +1,12 @@
-export const App = () => {
+import PhoneBook from "./Phonebook/Phonebook";
+import { Container } from "./App.styled";
+
+export default function App() {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+    <Container>
+      <PhoneBook/>
+    </Container>
+  )
+}
+
+
