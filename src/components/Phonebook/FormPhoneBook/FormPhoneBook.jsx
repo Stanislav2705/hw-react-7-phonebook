@@ -2,9 +2,9 @@ import { Formik, Form } from "formik";
 import * as yup from 'yup';
 import { LabelForm, Input, Block, Text, Button,Container } from "./FormPhoneBook.styled";
 import { useDispatch, useSelector } from "react-redux";
-import { getContacts } from "redux/selectors";
+import { selectContacts } from "redux/selectors";
 import { Notify } from 'notiflix';
-import { addContact } from 'redux/contacts/slice';
+import { addContact } from 'redux/requests';
 import ErrorForm from "../ErrorForm/ErrorForm";
 
 const initialState = {
@@ -20,7 +20,7 @@ const validation = yup.object().shape({
 
 export default function FormPhoneBook() {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
     const handleSubmit = (values,{resetForm}) => {
       function isDublicateName(values) {

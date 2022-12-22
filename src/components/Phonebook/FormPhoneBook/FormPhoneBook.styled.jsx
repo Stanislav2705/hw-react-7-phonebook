@@ -28,7 +28,7 @@ export const Button = styled.button`
   margin-top: 10px;
   cursor: pointer;
   border-radius: 5px;
-  border-color: orange;
+  border-color: #ffa500;
   background-color: #fff;
   color: orange;
   font-size: 18px;

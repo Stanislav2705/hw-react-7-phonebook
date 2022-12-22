@@ -2,113 +2,40 @@ import FormPhoneBook from "./FormPhoneBook/FormPhoneBook";
 import PhoneBookList from "./PhoneBookList/PhoneBookList";
 import BlockPhone from "./BlockPhone/BlockPhone";
 import Filter from "./Filter/Filter";
+import { useDispatch, useSelector } from "react-redux";
+import { selectError, selectFilter, selectIsLoading, selectVisibleContacts } from "redux/selectors";
+import { useEffect } from "react";
+import { fetchContacts } from "redux/requests";
+import { Error, Message } from "./Phonebook.styled";
+import Loader from "shared/Loader/Loader";
 
 export default function Phonebook() {
+  const dispatch = useDispatch();
+
+  const contacts = useSelector(selectVisibleContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const filter = useSelector(selectFilter);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   return (
     <div>
         <BlockPhone title='Phonebook'>
-          <FormPhoneBook />
+        <FormPhoneBook />
         </BlockPhone>
         <BlockPhone title="Contacts">
-          <Filter />
-          <PhoneBookList />
+        <Filter />
+        {isLoading && <Loader />}
+        {error && <Error>Something goes wrong. {error}.</Error>}
+        {contacts.length > 0 && <PhoneBookList />}
+        {(filter !== "" && contacts.length === 0) && <Message>This name was not found</Message>}
         </BlockPhone>
     </div>
   )
 }
-
-
-// export default function Phonebook() {
-//   const [contacts, setContacts] = useState(() => {
-//         const value = JSON.parse(localStorage.getItem("contacts"));
-//         return value ?? [];
-//     }
-//   );
-//   const [filter, setFilter] = useState("");
-
-
-//   useEffect(() => {
-//     localStorage.setItem('contacts', JSON.stringify(contacts))
-//   },[contacts])
-
-//   useEffect(() => {
-//     return () => {
-//       localStorage.removeItem("contacts")
-//     }
-//   }, [])
-
-//     const addContacts = (contact) => {
-//     if (isDuplicate(contact)) {
-//       return alert(`${contact.name} - ${contact.number} is already in contacts.`)
-//     }
-//     setContacts((prev) => {
-//       const newContact = {
-//         id: nanoid(),
-//         ...contact,
-//       }
-//       return  [...prev,newContact]
-
-//     })
-//     }
-
-//     const removeContact = (id) => {
-//       setContacts((prev) => {
-//         const newContacts = prev.filter((item) => item.id !== id);
-
-//         return newContacts
-
-//       })
-//     }
-
-
-//     const handleChange = (e) => {
-//     const { value } = e.target;
-//     setFilter(value)
-//   }
-
-//   const isDuplicate = ({name, number}) => {
-//     const result = contacts.find((item) => item.name === name
-//       && item.number === number);
-//     return result;
-//   }
-
-//     const getFilterContacts = () => {
-//     if (!filter) {
-//       return contacts;
-//     }
-
-//     const normalizedFilter = filter.toLocaleLowerCase();
-//     const filteredContacts = contacts.filter(({ name, number }) => {
-//       const normalizedName = name.toLocaleLowerCase();
-//       const normalizedNumber = number.toLocaleLowerCase();
-//       const result = normalizedName.includes(normalizedFilter)
-//         || normalizedNumber.includes(normalizedFilter);
-//       return result;
-//     })
-//     return filteredContacts;
-//   }
-
-//   const filteredContacts = getFilterContacts();
-
-//   return (
-//     <div>
-//         <BlockPhone title='Phonebook'>
-//           <FormPhoneBook onSubmit={addContacts} />
-//         </BlockPhone>
-//         <BlockPhone title="Contacts">
-//           <Label htmlFor="filter"><Text></Text></Label>
-//           <Input
-//             type="text"
-//             name="filter"
-//             value={filter}
-//             onChange={handleChange}
-//             placeholder="Find contacts by name"
-//           />
-//           <PhoneBookList items={filteredContacts} removeContact={removeContact} />
-//         </BlockPhone>
-//     </div>
-//   )
-// }
 
 
 
